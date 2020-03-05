@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SnakeNEAT", "SnakeNEAT.pyproj", "{B489D8E1-70A7-4416-B64B-F0EDE2A566DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B489D8E1-70A7-4416-B64B-F0EDE2A566DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B489D8E1-70A7-4416-B64B-F0EDE2A566DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30AF3E1D-3B83-42FF-AB9D-D6DBC1E851FD}
+	EndGlobalSection
+EndGlobal
