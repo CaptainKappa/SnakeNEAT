@@ -16,7 +16,6 @@ class Snake:
     COLOR_FILLED = (0, 0, 0)
     COLOR_BORDER = (99, 163, 96)
 
-
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -25,12 +24,11 @@ class Snake:
         self.xForce = 0
         self.yForce = 0
         self.direction = None
-
+        self.stepsLeft = 100;
 
     def move(self):
         self.x += self.xForce * BLOCK_SIZE
         self.y += self.yForce * BLOCK_SIZE
-
 
     def changeForce(self,input):
         if input == 0 and self.direction != "down":
@@ -46,7 +44,6 @@ class Snake:
             self.xForce, self.yForce = 1, 0
             self.direction = "right"
 
-
     def draw(self, win):
         snakeHead = []
         snakeHead.append(self.x)
@@ -60,7 +57,6 @@ class Snake:
             pygame.draw.rect(win, self.COLOR_FILLED, [element[0], element[1], BLOCK_SIZE, BLOCK_SIZE])
             pygame.draw.rect(win, self.COLOR_BORDER, [element[0], element[1], BLOCK_SIZE, BLOCK_SIZE], 1)
 
-
     def colApple(self, apple):
         if self.x == apple.x and self.y == apple.y:
             apple.ate = True
@@ -69,11 +65,9 @@ class Snake:
         else:
             return False
 
-
     def colWall(self):
         if self.x >= 281 or self.x <= 9 or self.y >= 281 or self.y <= 9:
             return True
-
 
     def colBody(self):
         for i in range(len(self.body) - 1):
@@ -113,9 +107,8 @@ class Snake:
 class Apple:
     COLOR_FILLED = (184, 44, 44)
     COLOR_BORDER = (99, 163, 96)
-    
 
-    def __init__(self,snakeBody):
+    def __init__(self, snakeBody):
         while True:
             self.x = random.randint(1,((WIN_WIDTH/2)/BLOCK_SIZE) - 2) * BLOCK_SIZE
             self.y = random.randint(1,(WIN_HEIGHT/BLOCK_SIZE) - 2) * BLOCK_SIZE
@@ -123,13 +116,11 @@ class Apple:
             if not self.checkOccupied(snakeBody):
                 break
 
-
-
     def draw(self, win):
         pygame.draw.rect(win, self.COLOR_FILLED, [self.x, self.y, BLOCK_SIZE, BLOCK_SIZE])
         pygame.draw.rect(win, self.COLOR_BORDER, [self.x, self.y, BLOCK_SIZE, BLOCK_SIZE], 1)
 
-    def checkOccupied(self,snakeBody):
+    def checkOccupied(self, snakeBody):
         for element in snakeBody:
             if element[0] == self.x and element[1] == self.y:
                 return True
@@ -138,7 +129,6 @@ class Apple:
 
 
 # RUNNING GAME
-
 def draw_window_play(win, snake, apple, evalList):
     win.fill((99, 163, 96))
     snake.draw(win)
@@ -156,8 +146,8 @@ def draw_window_play(win, snake, apple, evalList):
     pygame.display.flip()
     pygame.display.update()
 
-
 def main(genomes, config):
+    os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (200, 200)
     global gen
     pop = 0
     nets = []
@@ -165,7 +155,6 @@ def main(genomes, config):
     snakes = []
     win = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
     clock = pygame.time.Clock()
-
 
     for index, g in genomes:
         net = neat.nn.FeedForwardNetwork.create(g, config)
@@ -196,19 +185,19 @@ def main(genomes, config):
             snake.changeForce(direction)
 
             snake.move()
+            snake.stepsLeft -= 1
         
             if snake.colApple(apple):
                 apple = Apple(snake.body)
                 score += 1
                 g.fitness += 100
-            elif snake.colWall():
-                run = False
-                g.fitness -= 50
-            elif snake.colBody():
+                snake.stepsLeft += 50
+
+            if snake.colWall() or snake.colBody() or snake.stepsLeft == 0:
                 run = False
                 g.fitness -= 50
 
-            evalList = [score,pop,gen]
+            evalList = [score, pop, gen]
 
             draw_window_play(win, snake, apple, evalList)
             g.fitness += 0.1
@@ -229,7 +218,6 @@ def run(config_path):
     p.add_reporter(stats)
 
     winner = p.run(main, 30)
-
 
 if __name__ == "__main__":
     local_dir = os.path.dirname("__file__")
